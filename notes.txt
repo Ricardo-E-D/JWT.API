@@ -1,0 +1,10 @@
+TODO:
+
+logout the user	=>
+	this should happen client side using credentials keeper (_credentialsKeeper.ClearCredentials();)
+
+expand the identityuser
+
+call api from mvc
+
+use jwt roles for mvc authorization
