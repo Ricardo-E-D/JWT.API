@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace JWT.API.Authentication
 {
     public interface IJwtToken
     {
-        SecurityTokenDescriptor CreateToken(ApplicationUser user, IList<string> userRoles);
+        SecurityTokenDescriptor CreateToken(IdentityUser user, IList<string> userRoles);
     }
 }

@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using JWT.API.Authentication;
+using JWT.API.Models.DomainUsers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +19,19 @@ namespace JWT.API.Controllers
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<IdentityUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration _configuration;
         private readonly IJwtToken _jwtToken;
+        private readonly ApplicationDbContext _context;
 
-        public AuthenticateController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IJwtToken jwtToken)
+        public AuthenticateController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IJwtToken jwtToken, ApplicationDbContext context)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             _configuration = configuration;
             _jwtToken = jwtToken;
+            _context = context;
         }
 
         [HttpPost]
@@ -61,7 +64,7 @@ namespace JWT.API.Controllers
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
 
-            ApplicationUser user = new ApplicationUser()
+            IdentityUser user = new IdentityUser()
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -82,7 +85,7 @@ namespace JWT.API.Controllers
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
 
-            ApplicationUser user = new ApplicationUser()
+            IdentityUser user = new IdentityUser()
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -102,6 +105,12 @@ namespace JWT.API.Controllers
                 await userManager.AddToRoleAsync(user, UserRoles.Admin);
             }
 
+            Admin admin = new Admin()
+            {
+                Id = user.Id
+            };
+            _context.Admins.Add(admin);
+            await _context.SaveChangesAsync();
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
     }

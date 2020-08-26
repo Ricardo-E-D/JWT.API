@@ -19,77 +19,6 @@ namespace JWT.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("JWT.API.Authentication.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers");
-                });
-
             modelBuilder.Entity("JWT.API.Models.DomainUsers.Admin", b =>
                 {
                     b.Property<int>("AdminId")
@@ -97,16 +26,14 @@ namespace JWT.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserFk")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("AdminId");
 
-                    b.HasIndex("ApplicationUserFk")
-                        .IsUnique()
-                        .HasFilter("[ApplicationUserFk] IS NOT NULL");
+                    b.HasIndex("Id");
 
-                    b.ToTable("Admins","TrainYourEyes");
+                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("JWT.API.Models.DomainUsers.Customer", b =>
@@ -116,16 +43,14 @@ namespace JWT.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserFk")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CustomerId");
 
-                    b.HasIndex("ApplicationUserFk")
-                        .IsUnique()
-                        .HasFilter("[ApplicationUserFk] IS NOT NULL");
+                    b.HasIndex("Id");
 
-                    b.ToTable("Customers","TrainYourEyes");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("JWT.API.Models.DomainUsers.EndUser", b =>
@@ -135,26 +60,24 @@ namespace JWT.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserFk")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CustomerFk")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProjectFk")
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.HasKey("EndUserId");
 
-                    b.HasIndex("ApplicationUserFk")
-                        .IsUnique()
-                        .HasFilter("[ApplicationUserFk] IS NOT NULL");
+                    b.HasIndex("CustomerId");
 
-                    b.HasIndex("CustomerFk");
+                    b.HasIndex("Id");
 
-                    b.HasIndex("ProjectFk");
+                    b.HasIndex("ProjectId");
 
-                    b.ToTable("EndUsers","TrainYourEyes");
+                    b.ToTable("EndUsers");
                 });
 
             modelBuilder.Entity("JWT.API.Models.DomainUsers.Project", b =>
@@ -164,21 +87,19 @@ namespace JWT.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserFk")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CustomerFk")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ProjectId");
 
-                    b.HasIndex("ApplicationUserFk")
-                        .IsUnique()
-                        .HasFilter("[ApplicationUserFk] IS NOT NULL");
+                    b.HasIndex("CustomerId");
 
-                    b.HasIndex("CustomerFk");
+                    b.HasIndex("Id");
 
-                    b.ToTable("Projects","TrainYourEyes");
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -230,6 +151,71 @@ namespace JWT.API.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -314,48 +300,48 @@ namespace JWT.API.Migrations
 
             modelBuilder.Entity("JWT.API.Models.DomainUsers.Admin", b =>
                 {
-                    b.HasOne("JWT.API.Authentication.ApplicationUser", "ApplicationUser")
-                        .WithOne("Admin")
-                        .HasForeignKey("JWT.API.Models.DomainUsers.Admin", "ApplicationUserFk");
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("Id");
                 });
 
             modelBuilder.Entity("JWT.API.Models.DomainUsers.Customer", b =>
                 {
-                    b.HasOne("JWT.API.Authentication.ApplicationUser", "ApplicationUser")
-                        .WithOne("Customer")
-                        .HasForeignKey("JWT.API.Models.DomainUsers.Customer", "ApplicationUserFk");
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("Id");
                 });
 
             modelBuilder.Entity("JWT.API.Models.DomainUsers.EndUser", b =>
                 {
-                    b.HasOne("JWT.API.Authentication.ApplicationUser", "ApplicationUser")
-                        .WithOne("EndUser")
-                        .HasForeignKey("JWT.API.Models.DomainUsers.EndUser", "ApplicationUserFk");
-
                     b.HasOne("JWT.API.Models.DomainUsers.Customer", "Customer")
                         .WithMany("EndUsers")
-                        .HasForeignKey("CustomerFk")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("Id");
+
                     b.HasOne("JWT.API.Models.DomainUsers.Project", "Project")
                         .WithMany("EndUsers")
-                        .HasForeignKey("ProjectFk")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("JWT.API.Models.DomainUsers.Project", b =>
                 {
-                    b.HasOne("JWT.API.Authentication.ApplicationUser", "ApplicationUser")
-                        .WithOne("Project")
-                        .HasForeignKey("JWT.API.Models.DomainUsers.Project", "ApplicationUserFk");
-
                     b.HasOne("JWT.API.Models.DomainUsers.Customer", "Customer")
                         .WithMany("Projects")
-                        .HasForeignKey("CustomerFk")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("Id");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -369,7 +355,7 @@ namespace JWT.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("JWT.API.Authentication.ApplicationUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -378,7 +364,7 @@ namespace JWT.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("JWT.API.Authentication.ApplicationUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -393,7 +379,7 @@ namespace JWT.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("JWT.API.Authentication.ApplicationUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -402,7 +388,7 @@ namespace JWT.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("JWT.API.Authentication.ApplicationUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

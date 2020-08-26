@@ -1,5 +1,5 @@
 ﻿using JWT.API.Models.DomainUsers;
-using JWT.API.Schematics;
+//using JWT.API.Schematics;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,10 +18,10 @@ namespace JWT.API.Authentication
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new AdminEntitySchemaDefinition());
-            builder.ApplyConfiguration(new CustomerEntitySchemaDefinition());
-            builder.ApplyConfiguration(new EndUserEntitySchemaDefinition());
-            builder.ApplyConfiguration(new ProjectEntitySchemaDefinition());
+            //builder.ApplyConfiguration(new AdminEntitySchemaDefinition());
+            //builder.ApplyConfiguration(new CustomerEntitySchemaDefinition());
+            //builder.ApplyConfiguration(new EndUserEntitySchemaDefinition());
+            //builder.ApplyConfiguration(new ProjectEntitySchemaDefinition());
             base.OnModelCreating(builder);
         }
     }

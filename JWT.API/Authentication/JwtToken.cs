@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace JWT.API.Authentication
             _configuration = configuration;
         }
 
-        public SecurityTokenDescriptor CreateToken(ApplicationUser user, IList<string> userRoles)
+        public SecurityTokenDescriptor CreateToken(IdentityUser user, IList<string> userRoles)
         {
             var claims = new List<Claim>
             {
