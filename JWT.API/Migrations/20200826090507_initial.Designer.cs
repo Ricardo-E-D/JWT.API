@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JWT.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200825190138_initial")]
+    [Migration("20200826090507_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,12 +33,18 @@ namespace JWT.API.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Language")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -84,6 +90,97 @@ namespace JWT.API.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.Admin", b =>
+                {
+                    b.Property<int>("AdminId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserFk")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("AdminId");
+
+                    b.HasIndex("ApplicationUserFk")
+                        .IsUnique()
+                        .HasFilter("[ApplicationUserFk] IS NOT NULL");
+
+                    b.ToTable("Admins","TrainYourEyes");
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.Customer", b =>
+                {
+                    b.Property<int>("CustomerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserFk")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CustomerId");
+
+                    b.HasIndex("ApplicationUserFk")
+                        .IsUnique()
+                        .HasFilter("[ApplicationUserFk] IS NOT NULL");
+
+                    b.ToTable("Customers","TrainYourEyes");
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.EndUser", b =>
+                {
+                    b.Property<int>("EndUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserFk")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CustomerFk")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectFk")
+                        .HasColumnType("int");
+
+                    b.HasKey("EndUserId");
+
+                    b.HasIndex("ApplicationUserFk")
+                        .IsUnique()
+                        .HasFilter("[ApplicationUserFk] IS NOT NULL");
+
+                    b.HasIndex("CustomerFk");
+
+                    b.HasIndex("ProjectFk");
+
+                    b.ToTable("EndUsers","TrainYourEyes");
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.Project", b =>
+                {
+                    b.Property<int>("ProjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserFk")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CustomerFk")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectId");
+
+                    b.HasIndex("ApplicationUserFk")
+                        .IsUnique()
+                        .HasFilter("[ApplicationUserFk] IS NOT NULL");
+
+                    b.HasIndex("CustomerFk");
+
+                    b.ToTable("Projects","TrainYourEyes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -215,6 +312,52 @@ namespace JWT.API.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.Admin", b =>
+                {
+                    b.HasOne("JWT.API.Authentication.ApplicationUser", "ApplicationUser")
+                        .WithOne("Admin")
+                        .HasForeignKey("JWT.API.Models.DomainUsers.Admin", "ApplicationUserFk");
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.Customer", b =>
+                {
+                    b.HasOne("JWT.API.Authentication.ApplicationUser", "ApplicationUser")
+                        .WithOne("Customer")
+                        .HasForeignKey("JWT.API.Models.DomainUsers.Customer", "ApplicationUserFk");
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.EndUser", b =>
+                {
+                    b.HasOne("JWT.API.Authentication.ApplicationUser", "ApplicationUser")
+                        .WithOne("EndUser")
+                        .HasForeignKey("JWT.API.Models.DomainUsers.EndUser", "ApplicationUserFk");
+
+                    b.HasOne("JWT.API.Models.DomainUsers.Customer", "Customer")
+                        .WithMany("EndUsers")
+                        .HasForeignKey("CustomerFk")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JWT.API.Models.DomainUsers.Project", "Project")
+                        .WithMany("EndUsers")
+                        .HasForeignKey("ProjectFk")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.Project", b =>
+                {
+                    b.HasOne("JWT.API.Authentication.ApplicationUser", "ApplicationUser")
+                        .WithOne("Project")
+                        .HasForeignKey("JWT.API.Models.DomainUsers.Project", "ApplicationUserFk");
+
+                    b.HasOne("JWT.API.Models.DomainUsers.Customer", "Customer")
+                        .WithMany("Projects")
+                        .HasForeignKey("CustomerFk")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

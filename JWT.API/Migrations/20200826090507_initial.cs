@@ -7,6 +7,9 @@ namespace JWT.API.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "TrainYourEyes");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -39,7 +42,9 @@ namespace JWT.API.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Language = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -152,6 +157,110 @@ namespace JWT.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Admins",
+                schema: "TrainYourEyes",
+                columns: table => new
+                {
+                    AdminId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserFk = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admins", x => x.AdminId);
+                    table.ForeignKey(
+                        name: "FK_Admins_AspNetUsers_ApplicationUserFk",
+                        column: x => x.ApplicationUserFk,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                schema: "TrainYourEyes",
+                columns: table => new
+                {
+                    CustomerId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserFk = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.CustomerId);
+                    table.ForeignKey(
+                        name: "FK_Customers_AspNetUsers_ApplicationUserFk",
+                        column: x => x.ApplicationUserFk,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                schema: "TrainYourEyes",
+                columns: table => new
+                {
+                    ProjectId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserFk = table.Column<string>(nullable: true),
+                    CustomerFk = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.ProjectId);
+                    table.ForeignKey(
+                        name: "FK_Projects_AspNetUsers_ApplicationUserFk",
+                        column: x => x.ApplicationUserFk,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Projects_Customers_CustomerFk",
+                        column: x => x.CustomerFk,
+                        principalSchema: "TrainYourEyes",
+                        principalTable: "Customers",
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EndUsers",
+                schema: "TrainYourEyes",
+                columns: table => new
+                {
+                    EndUserId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserFk = table.Column<string>(nullable: true),
+                    CustomerFk = table.Column<int>(nullable: false),
+                    ProjectFk = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EndUsers", x => x.EndUserId);
+                    table.ForeignKey(
+                        name: "FK_EndUsers_AspNetUsers_ApplicationUserFk",
+                        column: x => x.ApplicationUserFk,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EndUsers_Customers_CustomerFk",
+                        column: x => x.CustomerFk,
+                        principalSchema: "TrainYourEyes",
+                        principalTable: "Customers",
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EndUsers_Projects_ProjectFk",
+                        column: x => x.ProjectFk,
+                        principalSchema: "TrainYourEyes",
+                        principalTable: "Projects",
+                        principalColumn: "ProjectId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -190,6 +299,56 @@ namespace JWT.API.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Admins_ApplicationUserFk",
+                schema: "TrainYourEyes",
+                table: "Admins",
+                column: "ApplicationUserFk",
+                unique: true,
+                filter: "[ApplicationUserFk] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_ApplicationUserFk",
+                schema: "TrainYourEyes",
+                table: "Customers",
+                column: "ApplicationUserFk",
+                unique: true,
+                filter: "[ApplicationUserFk] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EndUsers_ApplicationUserFk",
+                schema: "TrainYourEyes",
+                table: "EndUsers",
+                column: "ApplicationUserFk",
+                unique: true,
+                filter: "[ApplicationUserFk] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EndUsers_CustomerFk",
+                schema: "TrainYourEyes",
+                table: "EndUsers",
+                column: "CustomerFk");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EndUsers_ProjectFk",
+                schema: "TrainYourEyes",
+                table: "EndUsers",
+                column: "ProjectFk");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_ApplicationUserFk",
+                schema: "TrainYourEyes",
+                table: "Projects",
+                column: "ApplicationUserFk",
+                unique: true,
+                filter: "[ApplicationUserFk] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_CustomerFk",
+                schema: "TrainYourEyes",
+                table: "Projects",
+                column: "CustomerFk");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -210,7 +369,23 @@ namespace JWT.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Admins",
+                schema: "TrainYourEyes");
+
+            migrationBuilder.DropTable(
+                name: "EndUsers",
+                schema: "TrainYourEyes");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Projects",
+                schema: "TrainYourEyes");
+
+            migrationBuilder.DropTable(
+                name: "Customers",
+                schema: "TrainYourEyes");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
