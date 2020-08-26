@@ -64,6 +64,8 @@ namespace JWT.API
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                  };
              });
+
+            services.AddScoped<IJwtToken, JwtToken>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

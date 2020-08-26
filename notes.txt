@@ -1,9 +1,12 @@
 TODO:
 
+DONE: create token based authentication in API
+DONE: add roles to token based authentication
+
 logout the user	=>
 	this should happen client side using credentials keeper (_credentialsKeeper.ClearCredentials();)
 
-expand the identityuser
+expand the identityuser to include customer, enduser etc.
 
 call api from mvc
 
