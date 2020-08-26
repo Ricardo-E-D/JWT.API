@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JWT.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200826104526_initial")]
-    partial class initial
+    [Migration("20200826111423_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,9 +55,9 @@ namespace JWT.API.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("JWT.API.Models.DomainUsers.EndUser", b =>
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.CustomerEndUser", b =>
                 {
-                    b.Property<int>("EndUserId")
+                    b.Property<int>("CustomerEndUserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -68,16 +68,11 @@ namespace JWT.API.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EndUserId");
+                    b.HasKey("CustomerEndUserId");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("Id");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("EndUsers");
                 });
@@ -102,6 +97,28 @@ namespace JWT.API.Migrations
                     b.HasIndex("Id");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.ProjectEndUser", b =>
+                {
+                    b.Property<int>("ProjectEndUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectEndUserId");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectEndUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -314,10 +331,10 @@ namespace JWT.API.Migrations
                         .HasForeignKey("Id");
                 });
 
-            modelBuilder.Entity("JWT.API.Models.DomainUsers.EndUser", b =>
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.CustomerEndUser", b =>
                 {
                     b.HasOne("JWT.API.Models.DomainUsers.Customer", "Customer")
-                        .WithMany("EndUsers")
+                        .WithMany("CustomerEndUsers")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -325,12 +342,6 @@ namespace JWT.API.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("Id");
-
-                    b.HasOne("JWT.API.Models.DomainUsers.Project", "Project")
-                        .WithMany("EndUsers")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("JWT.API.Models.DomainUsers.Project", b =>
@@ -344,6 +355,19 @@ namespace JWT.API.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("Id");
+                });
+
+            modelBuilder.Entity("JWT.API.Models.DomainUsers.ProjectEndUser", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("Id");
+
+                    b.HasOne("JWT.API.Models.DomainUsers.Project", "Project")
+                        .WithMany("ProjectEndUsers")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

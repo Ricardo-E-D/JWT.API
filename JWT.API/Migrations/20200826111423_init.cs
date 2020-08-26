@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace JWT.API.Migrations
 {
-    public partial class initial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -191,6 +191,32 @@ namespace JWT.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EndUsers",
+                columns: table => new
+                {
+                    CustomerEndUserId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(nullable: true),
+                    CustomerId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EndUsers", x => x.CustomerEndUserId);
+                    table.ForeignKey(
+                        name: "FK_EndUsers_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EndUsers_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
@@ -217,32 +243,25 @@ namespace JWT.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EndUsers",
+                name: "ProjectEndUsers",
                 columns: table => new
                 {
-                    EndUserId = table.Column<int>(nullable: false)
+                    ProjectEndUserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Id = table.Column<string>(nullable: true),
-                    CustomerId = table.Column<int>(nullable: false),
                     ProjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EndUsers", x => x.EndUserId);
+                    table.PrimaryKey("PK_ProjectEndUsers", x => x.ProjectEndUserId);
                     table.ForeignKey(
-                        name: "FK_EndUsers_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EndUsers_AspNetUsers_Id",
+                        name: "FK_ProjectEndUsers_AspNetUsers_Id",
                         column: x => x.Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_EndUsers_Projects_ProjectId",
+                        name: "FK_ProjectEndUsers_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "ProjectId",
@@ -309,8 +328,13 @@ namespace JWT.API.Migrations
                 column: "Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EndUsers_ProjectId",
-                table: "EndUsers",
+                name: "IX_ProjectEndUsers_Id",
+                table: "ProjectEndUsers",
+                column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectEndUsers_ProjectId",
+                table: "ProjectEndUsers",
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
@@ -346,6 +370,9 @@ namespace JWT.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "EndUsers");
+
+            migrationBuilder.DropTable(
+                name: "ProjectEndUsers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

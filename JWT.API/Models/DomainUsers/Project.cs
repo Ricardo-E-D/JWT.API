@@ -24,7 +24,6 @@ namespace JWT.API.Models.DomainUsers
         public Customer Customer { get; set; }
 
         //outgoing relations
-        [ForeignKey("ProjectId")]
-        public IEnumerable<EndUser> EndUsers { get; set; }
+        public IEnumerable<ProjectEndUser> ProjectEndUsers { get; set; }
     }
 }

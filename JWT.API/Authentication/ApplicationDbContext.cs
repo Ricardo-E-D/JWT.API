@@ -11,8 +11,9 @@ namespace JWT.API.Authentication
 
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<EndUser> EndUsers { get; set; }
+        public DbSet<CustomerEndUser> EndUsers { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectEndUser> ProjectEndUsers { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 

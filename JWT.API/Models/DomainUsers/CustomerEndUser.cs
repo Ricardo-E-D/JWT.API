@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace JWT.API.Models.DomainUsers
 {
-    public class Customer
+    public class CustomerEndUser
     {
         [Key]
-        public int CustomerId { get; set; }
+        public int CustomerEndUserId { get; set; }
 
         //foreign keys
         [ForeignKey("IdentityUser")]
         public string Id { get; set; }
         public IdentityUser IdentityUser { get; set; }
 
-        //outgoing relations
-        public IEnumerable<Project> Projects { get; set; }
-        public IEnumerable<CustomerEndUser> CustomerEndUsers { get; set; }
+        [ForeignKey("Customer")]
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
     }
 }

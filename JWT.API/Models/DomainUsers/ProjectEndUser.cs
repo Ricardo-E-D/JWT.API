@@ -1,5 +1,4 @@
-﻿using JWT.API.Authentication;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,20 +8,17 @@ using System.Threading.Tasks;
 
 namespace JWT.API.Models.DomainUsers
 {
-    public class EndUser
+    public class ProjectEndUser
     {
         [Key]
-        public int EndUserId { get; set; }
+        public int ProjectEndUserId { get; set; }
 
         //foreign keys
         [ForeignKey("IdentityUser")]
         public string Id { get; set; }
         public IdentityUser IdentityUser { get; set; }
 
-        [ForeignKey("Customer")]
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
-
+        [ForeignKey("Project")]
         public int ProjectId { get; set; }
         public Project Project { get; set; }
     }
