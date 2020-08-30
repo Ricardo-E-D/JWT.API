@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<form method="post">
+    <button type="submit" asp-action="Login"
+            asp-controller="Home">
+        Sign In
+    </button>
+    <button type="submit" asp-action="Logout"
+            asp-controller="Home">
+        Sign Out
+    </button>
+    <button type="submit" asp-action="ShowData"
+            asp-controller="Home">
+        Show Data
+    </button>
+    <h2>@Html.Raw(@ViewBag.Message)</h2>
+</form>
