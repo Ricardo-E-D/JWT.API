@@ -3,11 +3,18 @@ TODO:
 DONE: create token based authentication in API
 DONE: add roles to token based authentication
 
+DONE: expand the identityuser to include customer, enduser etc. =>
+	create api actions for each type of identityuser
+
+	schema:
+							C							R							U							D
+	Admin					Admin						--							--							--
+	Customer				Admin						Admin						Admin, Customer				Admin
+	Project					Admin, Customer				Admin, Customer				Admin, Customer, Project	Admin, Customer
+
+DONE: call api from mvc
+
 logout the user	=>
 	this should happen client side using credentials keeper (_credentialsKeeper.ClearCredentials();)
-
-expand the identityuser to include customer, enduser etc.
-
-call api from mvc
 
 use jwt roles for mvc authorization

@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
+using System.Text;
 
 namespace JTW.MVC.Controllers
 {
@@ -78,6 +79,57 @@ namespace JTW.MVC.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("token"));
 
             HttpResponseMessage response = client.GetAsync("/WeatherForecast").Result;
+            string stringData = response.Content.ReadAsStringAsync().Result;
+            List<Wheater> data = JsonConvert.DeserializeObject<List<Wheater>>(stringData);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                ViewBag.Message = "Oh no no no!";
+            }
+            else
+            {
+                string strTable = "<table border='1' cellpadding='10'>";
+                foreach (Wheater emp in data)
+                {
+                    strTable += "<tr>";
+                    strTable += "<td>";
+                    strTable += emp.Date;
+                    strTable += "</td>";
+                    strTable += "<td>";
+                    strTable += emp.Summary;
+                    strTable += "</td>";
+                    strTable += "<td>";
+                    strTable += emp.TemperatureC;
+                    strTable += "</td>";
+                    strTable += "<td>";
+                    strTable += emp.TemperatureF;
+                    strTable += "</td>";
+                    strTable += "</tr>";
+
+                }
+                strTable += "</table>";
+
+                ViewBag.Message = strTable;
+            }
+            return View("Index");
+        }
+
+        public IActionResult PostData()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult PostData(Model model)
+        {
+            string baseUrl = "https://localhost:44344/";
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(baseUrl);
+            var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+            client.DefaultRequestHeaders.Accept.Add(contentType);
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("token"));
+
+            HttpResponseMessage response = client.PostAsync("ss", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json")).Result;
             string stringData = response.Content.ReadAsStringAsync().Result;
             List<Wheater> data = JsonConvert.DeserializeObject<List<Wheater>>(stringData);
 

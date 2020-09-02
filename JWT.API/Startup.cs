@@ -64,6 +64,7 @@ namespace JWT.API
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                  };
              });
+            services.AddSwaggerGen();
 
             services.AddScoped<IJwtToken, JwtToken>();
         }
@@ -77,6 +78,14 @@ namespace JWT.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TrainYourEyes Api");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 
